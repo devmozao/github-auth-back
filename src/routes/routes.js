@@ -1,26 +1,24 @@
 'use strict'
 
 const routes = require('express').Router()
+const { auth } = require('../services/api')
 
-// routes.get('/auth', async (req, res) => {
-//   console.log(req.params)
-//   console.log(req.query)
-//   console.log(req.body)
+routes.get('/auth', async (req, res) => {
+  console.log(req.params)
+  console.log(req.query)
+  console.log(req.body)
 
-//   const result = await twit
-//     .get('statuses/user_timeline', { screen_name: 'devmozao', count: 200 })
-//     .then(response => {
-//       return {
-//         data: { ...response.data },
-//         remaining: response.resp.headers['x-rate-limit-remaining']
-//       }
-//     })
-//     .catch(error => {
-//       return res.send(error)
-//     })
+  let response
 
-//   console.log(result)
-//   return res.json(result)
-// })
+  try {
+    const { data } = req.body
+    response = await auth(data)
+    console.log('resp', response)
+  } catch (error) {
+    console.log('error', error)
+    response = error
+  }
+  return res.send(response.data)
+})
 
 module.exports = routes
